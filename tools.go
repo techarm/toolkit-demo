@@ -18,8 +18,9 @@ const randomStringSource = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 // Tools is the type used to instantiate this module. Any variable os this type will have access
 // to all the methods with the reciever *Tools
 type Tools struct {
-	MaxFileSize int
+	MaxFileSize      int
 	AllowedFileTypes []string
+	MaxJSONSize      int
 }
 
 // RandomString returns a string of random characters of length n, using randomStringSource
@@ -37,9 +38,9 @@ func (t *Tools) RandomString(n int) string {
 
 // UploadedFile is a struct used to save information abcout an upload file
 type UploadedFile struct {
-	NewFileName string
+	NewFileName      string
 	OriginalFileName string
-	FileSize int64
+	FileSize         int64
 }
 
 func (t *Tools) UploadOneFile(r *http.Request, uploadDir string, rename ...bool) (*UploadedFile, error) {
@@ -52,7 +53,7 @@ func (t *Tools) UploadOneFile(r *http.Request, uploadDir string, rename ...bool)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return files[0], nil
 }
 
@@ -81,7 +82,7 @@ func (t *Tools) UploadedFiles(r *http.Request, uploadDir string, rename ...bool)
 
 	for _, fHeaders := range r.MultipartForm.File {
 		for _, header := range fHeaders {
-			uploadFiles, err := func(uploadedFiles []*UploadedFile) ([]*UploadedFile, error)  {
+			uploadFiles, err := func(uploadedFiles []*UploadedFile) ([]*UploadedFile, error) {
 				var uploadFile UploadedFile
 				infile, err := header.Open()
 				if err != nil {
@@ -180,11 +181,11 @@ func (t *Tools) Slugify(s string) (string, error) {
 	return slug, nil
 }
 
-// DownloadStaticFile download a file, and tries to force the brower to avoid displaying it 
+// DownloadStaticFile download a file, and tries to force the brower to avoid displaying it
 // in the brower window by setting content disposition. It also allow specification of the display name
 func (t *Tools) DownloadStaticFile(w http.ResponseWriter, r *http.Request, p, file, displayName string) {
 	fp := path.Join(p, file)
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", displayName))
 
-	http.ServeFile(w, r ,fp)
+	http.ServeFile(w, r, fp)
 }

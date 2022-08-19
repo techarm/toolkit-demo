@@ -24,27 +24,27 @@ func TestTools_RandomString(t *testing.T) {
 }
 
 var uploadTests = []struct {
-	name string
-	allowedTypes []string
-	renameFile bool
+	name          string
+	allowedTypes  []string
+	renameFile    bool
 	errorExpected bool
-} {
+}{
 	{
-		name: "allow no rename",
-		allowedTypes: []string{"image/jpeg", "image/png"},
-		renameFile: false,
+		name:          "allow no rename",
+		allowedTypes:  []string{"image/jpeg", "image/png"},
+		renameFile:    false,
 		errorExpected: false,
 	},
 	{
-		name: "allow rename",
-		allowedTypes: []string{"image/jpeg", "image/png"},
-		renameFile: true,
+		name:          "allow rename",
+		allowedTypes:  []string{"image/jpeg", "image/png"},
+		renameFile:    true,
 		errorExpected: false,
 	},
 	{
-		name: "not allow file type",
-		allowedTypes: []string{"image/jpeg"},
-		renameFile: false,
+		name:          "not allow file type",
+		allowedTypes:  []string{"image/jpeg"},
+		renameFile:    false,
 		errorExpected: true,
 	},
 }
@@ -56,7 +56,7 @@ func TestTools_UploadFiles(t *testing.T) {
 		writer := multipart.NewWriter(pw)
 		wg := sync.WaitGroup{}
 		wg.Add(1)
-		go func ()  {
+		go func() {
 			defer writer.Close()
 			defer wg.Done()
 
@@ -73,7 +73,7 @@ func TestTools_UploadFiles(t *testing.T) {
 			defer f.Close()
 
 			img, _, err := image.Decode(f)
-			if err != nil  {
+			if err != nil {
 				t.Error("error decoding image", err)
 			}
 
@@ -118,7 +118,7 @@ func TestTools_UploadOneFile(t *testing.T) {
 	pr, pw := io.Pipe()
 	writer := multipart.NewWriter(pw)
 
-	go func ()  {
+	go func() {
 		defer writer.Close()
 
 		// create the from data field 'file'
@@ -134,7 +134,7 @@ func TestTools_UploadOneFile(t *testing.T) {
 		defer f.Close()
 
 		img, _, err := image.Decode(f)
-		if err != nil  {
+		if err != nil {
 			t.Error("error decoding image", err)
 		}
 
@@ -151,7 +151,7 @@ func TestTools_UploadOneFile(t *testing.T) {
 	var testTools Tools
 
 	uploadedFile, err := testTools.UploadOneFile(request, "./testdata/uploads/", true)
-	if err != nil{
+	if err != nil {
 		t.Error(err)
 	}
 
@@ -181,16 +181,16 @@ func TestTools_CreateDirIfNotExist(t *testing.T) {
 }
 
 var slugTests = []struct {
-	name string
-	s string
-	expected string
+	name          string
+	s             string
+	expected      string
 	errorExpected bool
-} {
-	{ name: "valid string", s: "now is the time", expected: "now-is-the-time", errorExpected: false},
-	{ name: "empty string", s: "", expected: "", errorExpected: true},
-	{ name: "complex string", s: "Now is the time for all GOOD men! @techarm @123456", expected: "now-is-the-time-for-all-good-men-techarm-123456", errorExpected: false},
-	{ name: "japanese string", s: "こんにちは！", expected: "", errorExpected: true},
-	{ name: "japanese string and roman characters", s: "こんにちは&Hello", expected: "hello", errorExpected: false},
+}{
+	{name: "valid string", s: "now is the time", expected: "now-is-the-time", errorExpected: false},
+	{name: "empty string", s: "", expected: "", errorExpected: true},
+	{name: "complex string", s: "Now is the time for all GOOD men! @techarm @123456", expected: "now-is-the-time-for-all-good-men-techarm-123456", errorExpected: false},
+	{name: "japanese string", s: "こんにちは！", expected: "", errorExpected: true},
+	{name: "japanese string and roman characters", s: "こんにちは&Hello", expected: "hello", errorExpected: false},
 }
 
 func TestTools_Slugify(t *testing.T) {
@@ -215,7 +215,7 @@ func TestTools_DownloadStaticFile(t *testing.T) {
 	var testTool Tools
 
 	testTool.DownloadStaticFile(rr, req, "./testdata", "pic.jpg", "puppy.jpg")
-	
+
 	res := rr.Result()
 	defer res.Body.Close()
 
