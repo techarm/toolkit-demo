@@ -1,4 +1,4 @@
-module github.com/techarm/toolkit-demo/v2
+module github.com/techarm/toolkit-demo
 
 
 go 1.18
